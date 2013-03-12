@@ -2,7 +2,7 @@
  * Simple MapReduce algorithm for friend recommendation
  * Based on the number of common friends between 2 non-friend users
  * 
- * works on following dataset:
+ * Dataset:
  *   http://snap.stanford.edu/class/cs246-data/hw1q1.zip
  * 
  */
