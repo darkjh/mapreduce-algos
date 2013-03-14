@@ -42,13 +42,6 @@ public class MRJob2 {
 		public void map(LongWritable key, Text value, Context context)
 				throws IOException, InterruptedException {
 			String line = value.toString();
-//			int index1 = line.indexOf(',');
-//			String user1 = line.substring(1, index1);
-//			String rest = line.substring(index1);
-//
-//			String[] v = rest.split("\t");
-//			String user2 = v[0];
-//			String count = v[1];
 			
 			Matcher m = pattern.matcher(line);
 			String user1, user2, count;
