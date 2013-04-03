@@ -9,7 +9,6 @@ package hw1;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +26,7 @@ public class APriori {
 	
 	static Scanner readDataFile(String filename) throws IOException {	
 		File file = new File(filename);
-		return new Scanner(file, StandardCharsets.UTF_8.name());
+		return new Scanner(file);
 	}
 	
 	static class ValueComparator<T> implements Comparator<T> {
