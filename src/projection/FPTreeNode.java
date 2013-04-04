@@ -1,34 +1,33 @@
 package projection;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
+/**
+ * FP-Tree node implementation
+ * 
+ * Based on article: www.cs.uiuc.edu/~hanj/pdf/sigmod00.pdf
+ * 
+ * @author Han JU
+ *
+ */
 public class FPTreeNode implements Comparable<FPTreeNode> {
 	private final Long item;
 	private int count;
 	private boolean isRoot;
 
 	private FPTreeNode parent;
+	// TODO replace this with memory efficient structure
 	private Map<Long, FPTreeNode> children;
-	
-	/** pointer to the next node of the same item in the tree */
-	private FPTreeNode next;
 
 	/** ctor for normal node */
-	public FPTreeNode(long i, int c, FPTreeNode n, FPTreeNode p) {
+	public FPTreeNode(long i, int c, FPTreeNode p) {
 		isRoot = false;
 		item = i;
 		count = c;
-		next = n;
 		parent = p;
-	}
-	
-	/** ctor for a node in header table */
-	public FPTreeNode(long i, int c) {
-		isRoot = false;
-		item = i;
-		count = c;
 	}
 
 	/** ctor for a root node */
@@ -38,9 +37,10 @@ public class FPTreeNode implements Comparable<FPTreeNode> {
 		isRoot = true;
 	}
 	
+	/** add a node as a child, also add to header table */
 	public FPTreeNode addChild(Long childItem, List<FPTreeNode> headerList) { 
 		if (children == null) {
-			children = new HashMap<Long, FPTreeNode>();
+			children = Maps.newHashMap();
 		}
 		
 		FPTreeNode child;
@@ -48,7 +48,7 @@ public class FPTreeNode implements Comparable<FPTreeNode> {
 			child = children.get(childItem);
 			child.incrementCount();
 		} else {
-			child = new FPTreeNode(childItem, 1, null, this);
+			child = new FPTreeNode(childItem, 1, this);
 			children.put(childItem, child);
 			headerList.add(child);
 		}
@@ -65,14 +65,6 @@ public class FPTreeNode implements Comparable<FPTreeNode> {
 
 	public void setParent(FPTreeNode parent) {
 		this.parent = parent;
-	}
-
-	public FPTreeNode getNext() {
-		return next;
-	}
-
-	public void setNext(FPTreeNode next) {
-		this.next = next;
 	}
 
 	public Long getItem() {

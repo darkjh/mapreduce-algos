@@ -1,9 +1,7 @@
 package projection;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +11,18 @@ import org.apache.mahout.cf.taste.model.DataModel;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 
-
+/**
+ * A FP-Tree implementation
+ * 
+ * Based on article: www.cs.uiuc.edu/~hanj/pdf/sigmod00.pdf
+ * 
+ * @author Han JU
+ *
+ */
 public class FPTree {
 	
 	private DataModel dataModel;
@@ -41,6 +47,9 @@ public class FPTree {
 	}
 	
 	public FPTree(File file, int threshold) throws Exception {
+//		this(new GenericBooleanPrefDataModel( 
+//				GenericBooleanPrefDataModel.toDataMap(
+//						new FileDataModel(file))), threshold);
 		this(new FileDataModel(file), threshold);
 	}
 	
@@ -74,8 +83,8 @@ public class FPTree {
 	 * TODO consider a priority queue
 	 */
 	public void firstScan() throws Exception {
-		L = new ArrayList<Long>();
-		freq = new HashMap<Long, Integer>();
+		L = Lists.newArrayList();
+		freq = Maps.newHashMap();
 		
 		LongPrimitiveIterator itemIter = dataModel.getItemIDs();
 		while(itemIter.hasNext()) {
@@ -97,14 +106,15 @@ public class FPTree {
 		
 		// for every transaction
 		while (transIter.hasNext()) {
-			// sort its items in descending frequency order
 			Long transID = transIter.next();
 			List<Long> sortedItems = Lists.newArrayList();
+			// filtered out infrequent item
 			for (Long item : dataModel.getItemIDsFromUser(transID)) {
 				if (freq.containsKey(item)) {
 					sortedItems.add(item);
 				}
 			}
+			// sort its items in descending frequency order
 			Collections.sort(sortedItems, byFrequencyOrdering);
 			
 			insertTree(sortedItems, root);
