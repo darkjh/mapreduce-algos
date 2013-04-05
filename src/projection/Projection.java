@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
@@ -28,7 +30,8 @@ public class Projection {
 		FileWriter fstream = new FileWriter("/home/port/outputs/project_test");
 		BufferedWriter fout = new BufferedWriter(fstream);
 		
-		for (Long item : fpt.getL()) {
+		// for (Long item : fpt.getL()) {
+		for (Long item : headerTable.keySet()) {
 			HashMap<Long, Integer> counter = Maps.newHashMap();
 			List<FPTreeNode> list = (List<FPTreeNode>) headerTable.get(item);
 			
@@ -61,15 +64,20 @@ public class Projection {
 				}
 			}
 		}
-		
 		fout.close();
 	}
 	
-	// TODO debug strange difference in result between pref data and boolean data
 	public static void main(String[] args) throws Exception {
+		Stopwatch sw = new Stopwatch();
 		// String file = "./resources/tinyRecomm";
-		String file = "/home/port/datasets/msd-small/test_triples";
+		// String file = "/home/port/datasets/msd-small/test_triples";
+		String file = "/home/port/datasets/ml-10M/triples";
 		// String file = "./resources/TestExampleAutoGen";
+		
+		sw.start();
 		Projection.project(file, 2);
+		sw.stop();
+		
+		System.out.println(sw.elapsed(TimeUnit.MILLISECONDS));
 	}
 }

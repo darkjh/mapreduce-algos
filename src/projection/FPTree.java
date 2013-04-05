@@ -33,7 +33,7 @@ public class FPTree {
 	private List<Long> L;
 	private Map<Long, Integer> freq;
 	
-	private Ordering<Long> byFrequencyOrdering = new Ordering<Long>() {
+	private Ordering<Long> byDescFrequencyOrdering = new Ordering<Long>() {
 		// reversed order! 
 		// Array.sort() returns descending ordering
 		@Override
@@ -61,10 +61,6 @@ public class FPTree {
 		firstScan();
 		constructTree();
 		clean();
-	}
-	
-	public FPTreeNode getTree() {
-		return root;
 	}
 	
 	public Multimap<Long, FPTreeNode> getHeaderTable() {
@@ -96,9 +92,15 @@ public class FPTree {
 		}
 		
 		// sort in descending order of frequency
-		Collections.sort(L, byFrequencyOrdering);
+		Collections.sort(L, byDescFrequencyOrdering);
 	}
 	
+	/**
+	 * Examine every transaction (or every user's history), sort items in
+	 * descending frequency order and filter out infrequent item. Then add
+	 * this list of items to the FP-tree 
+	 * 
+	 */
 	private void constructTree() throws Exception {
 		LongPrimitiveIterator transIter = dataModel.getUserIDs();
 		
@@ -113,12 +115,19 @@ public class FPTree {
 				}
 			}
 			// sort its items in descending frequency order
-			Collections.sort(sortedItems, byFrequencyOrdering);
+			Collections.sort(sortedItems, byDescFrequencyOrdering);
 			
 			insertTree(sortedItems, root);
 		}
 	}
 	
+	/**
+	 * Take a list of items of form [p|P] and a tree node t, recursively add p 
+	 * (the header of the list) in the subtree of which t is the root
+	 * 
+	 * @param sorted
+	 * @param curr
+	 */
 	private void insertTree(List<Long> sorted, FPTreeNode curr) {
 		if (!sorted.isEmpty()) {
 			Long item = sorted.get(0);
@@ -130,22 +139,22 @@ public class FPTree {
 	
 	/** help GC, these are big */
 	private void clean() {
+		L = null;
 		freq = null;
 		dataModel = null;
 	}
 	
 	public static void main(String[] args) throws Exception {
 		// String file = "./resources/tinyRecomm";
-		// String file = "/home/port/datasets/msd-small/test_triples";
-		String file = "./resources/TestExampleAutoGen";
+		String file = "/home/port/datasets/msd-small/test_triples";
+		// String file = "./resources/TestExampleAutoGen";
 		Runtime rt = Runtime.getRuntime();
-		
-		FPTree fpt = new FPTree(file, 3);
-		
+
 		long m1 = rt.freeMemory();
-
+		FPTree fpt = new FPTree(file, 2);
+		
 		rt.gc();
-
+		Thread.sleep(1000);
 		long m2 = rt.freeMemory();
 		
 		System.out.println(m2 - m1);

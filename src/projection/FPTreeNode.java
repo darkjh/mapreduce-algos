@@ -13,7 +13,7 @@ import com.google.common.collect.Maps;
  * @author Han JU
  *
  */
-public class FPTreeNode implements Comparable<FPTreeNode> {
+public class FPTreeNode {
 	private final Long item;
 	private int count;
 	private boolean isRoot;
@@ -73,13 +73,6 @@ public class FPTreeNode implements Comparable<FPTreeNode> {
 	
 	public int incrementCount() {
 		return ++count;
-	}
-
-	@Override
-	public int compareTo(FPTreeNode that) {
-		// reversed order! 
-		// Array.sort() returns descending ordering
-		return that.getCount() - this.getCount();
 	}
 	
 	@Override
