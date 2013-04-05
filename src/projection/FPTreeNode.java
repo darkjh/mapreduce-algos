@@ -63,10 +63,6 @@ public class FPTreeNode implements Comparable<FPTreeNode> {
 		return parent;
 	}
 
-	public void setParent(FPTreeNode parent) {
-		this.parent = parent;
-	}
-
 	public Long getItem() {
 		return item;
 	}

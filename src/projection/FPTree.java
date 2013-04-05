@@ -33,13 +33,14 @@ public class FPTree {
 	private List<Long> L;
 	private Map<Long, Integer> freq;
 	
-	Ordering<Long> byFrequencyOrdering = new Ordering<Long>() {
+	private Ordering<Long> byFrequencyOrdering = new Ordering<Long>() {
 		// reversed order! 
 		// Array.sort() returns descending ordering
 		@Override
 		public int compare(Long left, Long right) {
-			return freq.get(right) - freq.get(left);
-		}
+			int freqComp = freq.get(right) - freq.get(left);
+			// fixed order !!!
+			return freqComp != 0 ? freqComp : (int) (right - left);		}
 	};
 	
 	public FPTree(String filepath, int threshold) throws Exception {
@@ -47,9 +48,6 @@ public class FPTree {
 	}
 	
 	public FPTree(File file, int threshold) throws Exception {
-//		this(new GenericBooleanPrefDataModel( 
-//				GenericBooleanPrefDataModel.toDataMap(
-//						new FileDataModel(file))), threshold);
 		this(new FileDataModel(file), threshold);
 	}
 	
@@ -59,7 +57,7 @@ public class FPTree {
 		
 		root = new FPTreeNode();
 		headerTable = LinkedListMultimap.create();
-
+		
 		firstScan();
 		constructTree();
 		clean();
@@ -138,16 +136,15 @@ public class FPTree {
 	
 	public static void main(String[] args) throws Exception {
 		// String file = "./resources/tinyRecomm";
-		String file = "/home/port/datasets/msd-small/test_triples";
-		
+		// String file = "/home/port/datasets/msd-small/test_triples";
+		String file = "./resources/TestExampleAutoGen";
 		Runtime rt = Runtime.getRuntime();
 		
-		FPTree fpt = new FPTree(file, 3);		
-		Thread.sleep(3000);
+		FPTree fpt = new FPTree(file, 3);
+		
 		long m1 = rt.freeMemory();
 
 		rt.gc();
-		Thread.sleep(3000);
 
 		long m2 = rt.freeMemory();
 		

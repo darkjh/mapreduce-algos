@@ -25,7 +25,7 @@ public class TestExampleGen {
 			String[] items = line[1].split(",");
 			
 			for (String i : items) {
-				out.write(user + "\t" + alphabet.indexOf(i) + "\n");
+				out.write(user + "\t" + alphabet.indexOf(i) + "\t1\n");
 			}
 		}
 		out.close();

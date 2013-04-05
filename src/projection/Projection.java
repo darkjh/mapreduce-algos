@@ -56,8 +56,8 @@ public class Projection {
 							: i.toString() + "\t" + item.toString();
 					out = out + "\t" + Integer.toString(pairSupport);
 					
-					System.out.println(out);
-					// fout.write(out + "\n");
+					// System.out.println(out);
+					fout.write(out + "\n");
 				}
 			}
 		}
@@ -68,8 +68,8 @@ public class Projection {
 	// TODO debug strange difference in result between pref data and boolean data
 	public static void main(String[] args) throws Exception {
 		// String file = "./resources/tinyRecomm";
-		// String file = "/home/port/datasets/msd-small/test_triples_bool";
-		String file = "./resources/TestExampleAutoGen";
-		Projection.project(file, 3);
+		String file = "/home/port/datasets/msd-small/test_triples";
+		// String file = "./resources/TestExampleAutoGen";
+		Projection.project(file, 2);
 	}
 }
