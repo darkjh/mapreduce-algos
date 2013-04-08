@@ -8,11 +8,23 @@ import java.util.Scanner;
 /**
  * Generate test examples
  * 
+ * Input is in transaction format:
+ * 	100	f,a,c,d,g,i,m,p
+ * 	200	a,b,c,f,l,m,o
+ * 	...
+ * 
+ * output is in graph link format:
+ *  100	f
+ *  100	a
+ *  ...
+ * 	
+ * Fields are always tab delimited
+ * 
  * @author Han JU
  *
  */
 public class TestExampleGen {
-	
+	// dictionary for translating letters to numbers
 	private static String alphabet = "_abcdefghijklmnopqrstuvwxyz";
 	
 	public static void generateFromTransacFile(File file) throws Exception {
