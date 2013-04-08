@@ -1,7 +1,5 @@
 package projection;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,16 +19,13 @@ import com.google.common.collect.Multimap;
  *
  */
 public class Projection {
+	private static final String SEP = "\t";
 	
-	public static void project(String filepath, int minSupport) throws Exception {
+	public static void project(String filepath, OutputLayer ol, 
+			int minSupport) throws Exception {
 		FPTree fpt = new FPTree(filepath, minSupport);
 		Multimap<Long, FPTreeNode> headerTable = fpt.getHeaderTable();
 		
-		// TODO formal output layer
-		FileWriter fstream = new FileWriter("/home/port/outputs/project_test");
-		BufferedWriter fout = new BufferedWriter(fstream);
-		
-		// for (Long item : fpt.getL()) {
 		for (Long item : headerTable.keySet()) {
 			HashMap<Long, Integer> counter = Maps.newHashMap();
 			List<FPTreeNode> list = (List<FPTreeNode>) headerTable.get(item);
@@ -42,7 +37,6 @@ public class Projection {
 				FPTreeNode curr = node.getParent();
 				while (!curr.isRoot()) {
 					Long currItem = curr.getItem();
-					assert currItem != item;
 					int count = counter.containsKey(currItem) ? counter.get(currItem) : 0;
 					counter.put(currItem, count + condSupport);
 					curr = curr.getParent();
@@ -53,29 +47,27 @@ public class Projection {
 			for (Long i : counter.keySet()) {
 				int pairSupport = counter.get(i);
 				if (pairSupport >= minSupport) {
-					// TODO formal output layer
 					String out = item < i ? 
-							item.toString() + "\t" + i.toString()
-							: i.toString() + "\t" + item.toString();
-					out = out + "\t" + Integer.toString(pairSupport);
-					
-					// System.out.println(out);
-					fout.write(out + "\n");
+						item.toString() + SEP + i.toString()
+							: i.toString() + SEP + item.toString();
+					out = out + SEP + Integer.toString(pairSupport);
+					ol.writeLine(out);
 				}
 			}
 		}
-		fout.close();
+		ol.close();
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Stopwatch sw = new Stopwatch();
 		// String file = "./resources/tinyRecomm";
 		// String file = "/home/port/datasets/msd-small/test_triples";
-		String file = "/home/port/datasets/ml-10M/triples";
+		// String file = "/home/port/datasets/ml-10M/triples";
 		// String file = "./resources/TestExampleAutoGen";
-		
+
+		Stopwatch sw = new Stopwatch();	
 		sw.start();
-		Projection.project(file, 2);
+		Projection.project(args[0], new OutputLayer(args[1]), 
+				Integer.parseInt(args[2]));
 		sw.stop();
 		
 		System.out.println(sw.elapsed(TimeUnit.MILLISECONDS));
