@@ -40,7 +40,8 @@ public class FPTree {
 		public int compare(Long left, Long right) {
 			int freqComp = freq.get(right) - freq.get(left);
 			// fixed order !!!
-			return freqComp != 0 ? freqComp : (int) (right - left);		}
+			return freqComp != 0 ? freqComp : (int) (right - left);
+		}
 	};
 	
 	public FPTree(String filepath, int threshold) throws Exception {
